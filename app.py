@@ -37,6 +37,3 @@ def predict():
 
     # Return the predicted salary as JSON response
     return jsonify({'predicted_salary': predicted_salary})
-
-if __name__ == '__main__':
-    app.run()
