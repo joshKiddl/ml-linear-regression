@@ -4,6 +4,8 @@ from sklearn.linear_model import LinearRegression
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import mean_squared_error
 from flask import Flask, request, jsonify
+from flask_cors import CORS
+
 
 # Load the data from CSV file
 data = pd.read_csv('./data/Data.csv')
@@ -23,6 +25,7 @@ model.fit(X_train, y_train)
 
 # Define the Flask app
 app = Flask(__name__)
+cors = CORS(app)
 
 # Route for predicting the salary
 @app.route('/predict', methods=['POST'])
