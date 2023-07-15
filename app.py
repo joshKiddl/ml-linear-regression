@@ -5,7 +5,6 @@ from sklearn.model_selection import train_test_split
 from flask import Flask, request, jsonify
 from flask_cors import CORS
 
-
 # Load the data from CSV file
 data = pd.read_csv('./data/Data.csv')
 
@@ -36,6 +35,9 @@ def predict():
     # Make the prediction
     input_data = np.array([[age, weight]])
     predicted_salary = model.predict(input_data)[0]
+
+    # Check if predicted salary is below zero and set it to zero if it is
+    predicted_salary = max(predicted_salary, 0)
 
     # Return the predicted salary as JSON response
     return jsonify({'predicted_salary': predicted_salary})
