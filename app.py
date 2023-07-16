@@ -6,6 +6,7 @@ from sklearn.linear_model import LogisticRegression
 from sklearn.model_selection import train_test_split
 from flask import Flask, request, jsonify
 from flask_cors import CORS
+import json
 
 # Load the data from CSV file
 data = pd.read_csv('./data/Data.csv')
@@ -44,7 +45,7 @@ def predict():
     predicted_salary = max(predicted_salary, 0)
 
     # Return the predicted salary as JSON response
-    return jsonify({'predicted_salary': predicted_salary})
+    return jsonify({'predicted_salary': int(predicted_salary)})
 
 # Decision Trees
 
@@ -69,7 +70,7 @@ def predict_decision_tree():
     predicted_salary = max(predicted_salary, 0)
 
     # Return the predicted salary as JSON response
-    return jsonify({'predicted_salary': predicted_salary})
+    return jsonify({'predicted_salary': int(predicted_salary)})
 
 # Logistic Regression
 
@@ -91,4 +92,18 @@ def predict_logistic():
     predicted_salary = logistic_model.predict(input_data)[0]
 
     # Return the predicted salary as JSON response
-    return jsonify({'predicted_salary': predicted_salary})
+    return jsonify({'predicted_salary': int(predicted_salary)})
+
+# Define custom JSON encoder to handle int64 serialization
+class CustomJSONEncoder(json.JSONEncoder):
+    def default(self, obj):
+        if isinstance(obj, np.int64):
+            return int(obj)
+        return super().default(obj)
+
+# Set the custom JSON encoder for the Flask app
+app.json_encoder = CustomJSONEncoder
+
+# Run the Flask app
+if __name__ == '__main__':
+    app.run()
