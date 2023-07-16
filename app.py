@@ -97,7 +97,8 @@ def predict_logistic():
 # Route to serve the Data.csv file
 @app.route('/data', methods=['GET'])
 def get_data():
-    return send_file('./data/Data.csv', mimetype='text/csv')
+    data_dict = data.to_dict('records')
+    return jsonify(data_dict)
 
 # Define custom JSON encoder to handle int64 serialization
 class CustomJSONEncoder(json.JSONEncoder):
