@@ -16,6 +16,10 @@ y = data['Salary']
 # Split the data into training and testing sets
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
 
+# Define the Flask app
+app = Flask(__name__)
+cors = CORS(app)
+
 # Linear Regression
 
 # Create a linear regression model
@@ -65,8 +69,3 @@ def predict_decision_tree():
 
     # Return the predicted salary as JSON response
     return jsonify({'predicted_salary': predicted_salary})
-
-# Define the Flask app
-app = Flask(__name__)
-cors = CORS(app)
-
