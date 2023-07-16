@@ -2,6 +2,7 @@ import numpy as np
 import pandas as pd
 from sklearn.linear_model import LinearRegression
 from sklearn.tree import DecisionTreeRegressor
+from sklearn.linear_model import LogisticRegression
 from sklearn.model_selection import train_test_split
 from flask import Flask, request, jsonify
 from flask_cors import CORS
@@ -66,6 +67,28 @@ def predict_decision_tree():
 
     # Check if predicted salary is below zero and set it to zero if it is
     predicted_salary = max(predicted_salary, 0)
+
+    # Return the predicted salary as JSON response
+    return jsonify({'predicted_salary': predicted_salary})
+
+# Logistic Regression
+
+# Create a logistic regression model
+logistic_model = LogisticRegression()
+
+# Fit the logistic regression model to the training data
+logistic_model.fit(X_train, y_train)
+
+# Route for predicting the salary with logistic regression
+@app.route('/predict-logistic', methods=['POST'])
+def predict_logistic():
+    # Retrieve the input data from the request
+    age = float(request.json['age'])
+    weight = float(request.json['weight'])
+
+    # Make the prediction using the logistic regression model
+    input_data = np.array([[age, weight]])
+    predicted_salary = logistic_model.predict(input_data)[0]
 
     # Return the predicted salary as JSON response
     return jsonify({'predicted_salary': predicted_salary})
