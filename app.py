@@ -4,7 +4,7 @@ from sklearn.linear_model import LinearRegression
 from sklearn.tree import DecisionTreeRegressor
 from sklearn.linear_model import LogisticRegression
 from sklearn.model_selection import train_test_split
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, send_file
 from flask_cors import CORS
 import json
 
@@ -94,6 +94,11 @@ def predict_logistic():
     # Return the predicted salary as JSON response
     return jsonify({'predicted_salary': int(predicted_salary)})
 
+# Route to serve the Data.csv file
+@app.route('/data', methods=['GET'])
+def get_data():
+    return send_file('./data/Data.csv', mimetype='text/csv')
+
 # Define custom JSON encoder to handle int64 serialization
 class CustomJSONEncoder(json.JSONEncoder):
     def default(self, obj):
@@ -107,3 +112,4 @@ app.json_encoder = CustomJSONEncoder
 # Run the Flask app
 if __name__ == '__main__':
     app.run()
+
