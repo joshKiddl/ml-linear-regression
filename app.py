@@ -129,6 +129,18 @@ def openai_predict():
     # Make the request to the OpenAI API
     response = requests.post('https://api.openai.com/v4/engines/davinci-codex/completions', headers=headers, data=json.dumps(data))
 
+    if response.status_code == 200:
+        response_data = response.json()
+        if 'choices' in response_data:
+            predicted_text = response_data['choices'][0]['text'].strip()
+        else:
+            # Handle the situation where 'choices' is not in the response
+            print("No 'choices' in API response")
+            print(response_data)
+    else:
+        # Handle the situation where the API response is not a success
+        print(f"API request failed with status code {response.status_code}")
+
     # Parse the response from the OpenAI API
     response_data = response.json()
 
