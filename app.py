@@ -117,10 +117,13 @@ def openai_predict():
     # Retrieve the input data from the request
     input_text = request.json['inputText']
 
+    # Preempt the input_text with the request statement
+    prompt = f"Give me 5 examples of Problem Statements for the following problem: {input_text}"
+
     # Make the request to the OpenAI API using the openai.Completion.create() method
     response = openai.Completion.create(
         model="text-davinci-002",
-        prompt=input_text,
+        prompt=prompt,
         max_tokens=60
     )
 
@@ -135,6 +138,7 @@ def openai_predict():
 
     # Return the predicted text as JSON response
     return jsonify({'predicted_text': predicted_text})
+
 
 # Run the Flask app
 if __name__ == '__main__':
