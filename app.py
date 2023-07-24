@@ -108,15 +108,15 @@ def predict_logistic():
 def get_data():
     return send_from_directory('data', 'Data.csv', as_attachment=True)
 
+# Route for predicting with OpenAI integration
 @app.route('/openai-predict', methods=['POST'])
 def openai_predict():
     # Retrieve the input data from the request
-    age = float(request.json['age'])
-    weight = float(request.json['weight'])
+    input_text = request.json['inputText']
 
     # Prepare the data for the OpenAI API
     data = {
-        'prompt': f'Age: {age}\nWeight: {weight}\nPredict: ',
+        'prompt': input_text,
         'max_tokens': 60
     }
 
