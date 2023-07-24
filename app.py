@@ -10,12 +10,14 @@ import requests
 import json
 from dotenv import load_dotenv
 import os
+import openai
+
 
 # Load the .env file
 load_dotenv()
 
 # Get the secret key from the environment variables
-secret_key = os.getenv("SECRET_KEY")
+openai.api_key = os.getenv("SECRET_KEY")
 
 # Define the Flask app
 app = Flask(__name__)
@@ -115,41 +117,21 @@ def openai_predict():
     # Retrieve the input data from the request
     input_text = request.json['inputText']
 
-    # Prepare the data for the OpenAI API
-    data = {
-        'prompt': input_text,
-        'max_tokens': 60
-    }
+    # Make the request to the OpenAI API using the openai.Completion.create() method
+    response = openai.Completion.create(
+        engine="davinci-codex",
+        prompt=input_text,
+        max_tokens=60
+    )
 
-    # Make the request to the OpenAI API
-    headers = {
-        'Authorization': f'Bearer {secret_key}',
-        'Content-Type': 'application/json'
-    }
-
-    try:
-        response = requests.post('https://api.openai.com/v1/completions', headers=headers, data=json.dumps(data))
-        response.raise_for_status()  # This will raise an exception if the response contains an HTTP error status code
-    except requests.exceptions.HTTPError as err:
-        print(f"HTTP error occurred: {err}")  # or use your logger here
-        return jsonify({'error': str(err)})
-    except Exception as err:
-        print(f"Other error occurred: {err}")  # or use your logger here
-        return jsonify({'error': str(err)})
-
-    if response.status_code == 200:
-        response_data = response.json()
-        if 'choices' in response_data:
-            predicted_text = response_data['choices'][0]['text'].strip()
-        else:
-            # Handle the situation where 'choices' is not in the response
-            print("No 'choices' in API response")
-            print(response_data)
-            return jsonify({'error': "No 'choices' in API response"})
+    # Check for errors in the response
+    if 'choices' in response and len(response['choices']) > 0:
+        predicted_text = response['choices'][0]['text'].strip()
     else:
-        # Handle the situation where the API response is not a success
-        print(f"API request failed with status code {response.status_code}")
-        return jsonify({'error': f"API request failed with status code {response.status_code}"})
+        # Handle the situation where 'choices' is not in the response
+        print("No 'choices' in API response")
+        print(response)
+        return jsonify({'error': "No 'choices' in API response"})
 
     # Return the predicted text as JSON response
     return jsonify({'predicted_text': predicted_text})
