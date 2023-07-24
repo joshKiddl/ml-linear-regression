@@ -1,8 +1,8 @@
 import numpy as np
 import pandas as pd
-from sklearn.linear_model import LinearRegression
-from sklearn.tree import DecisionTreeRegressor
-from sklearn.linear_model import LogisticRegression
+# from sklearn.linear_model import LinearRegression
+# from sklearn.tree import DecisionTreeRegressor
+# from sklearn.linear_model import LogisticRegression
 from sklearn.model_selection import train_test_split
 from flask import Flask, request, jsonify, send_from_directory
 from flask_cors import CORS
@@ -17,96 +17,97 @@ load_dotenv()
 # Get the secret key from the environment variables
 secret_key = os.getenv("SECRET_KEY")
 
-# Load the data from CSV file
-data = pd.read_csv('./data/Data.csv')
-
-# Extract input features (Age and Weight) and target variable (Salary)
-X = data[['Age', 'Weight']]
-y = data['Salary']
-
-# Split the data into training and testing sets
-X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
-
 # Define the Flask app
 app = Flask(__name__)
 cors = CORS(app)
 
-# Linear Regression
+# # Load the data from CSV file
+# data = pd.read_csv('./data/Data.csv')
 
-# Create a linear regression model
-model = LinearRegression()
+# # Extract input features (Age and Weight) and target variable (Salary)
+# X = data[['Age', 'Weight']]
+# y = data['Salary']
 
-# Fit the linear regression model to the training data
-model.fit(X_train, y_train)
+# # Split the data into training and testing sets
+# X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
 
-# Route for predicting the salary with linear regression
-@app.route('/predict', methods=['POST'])
-def predict():
-    # Retrieve the input data from the request
-    age = float(request.json['age'])
-    weight = float(request.json['weight'])
 
-    # Make the prediction
-    input_data = np.array([[age, weight]])
-    predicted_salary = model.predict(input_data)[0]
+# # Linear Regression
 
-    # Check if predicted salary is below zero and set it to zero if it is
-    predicted_salary = max(predicted_salary, 0)
+# # Create a linear regression model
+# model = LinearRegression()
 
-    # Return the predicted salary as JSON response
-    return jsonify({'predicted_salary': int(predicted_salary)})
+# # Fit the linear regression model to the training data
+# model.fit(X_train, y_train)
 
-# Decision Trees
+# # Route for predicting the salary with linear regression
+# @app.route('/predict', methods=['POST'])
+# def predict():
+#     # Retrieve the input data from the request
+#     age = float(request.json['age'])
+#     weight = float(request.json['weight'])
 
-# Create a decision tree regression model
-decision_tree_model = DecisionTreeRegressor()
+#     # Make the prediction
+#     input_data = np.array([[age, weight]])
+#     predicted_salary = model.predict(input_data)[0]
 
-# Fit the decision tree model to the training data
-decision_tree_model.fit(X_train, y_train)
+#     # Check if predicted salary is below zero and set it to zero if it is
+#     predicted_salary = max(predicted_salary, 0)
 
-# Route for predicting the salary with decision trees
-@app.route('/predict-decision-tree', methods=['POST'])
-def predict_decision_tree():
-    # Retrieve the input data from the request
-    age = float(request.json['age'])
-    weight = float(request.json['weight'])
+#     # Return the predicted salary as JSON response
+#     return jsonify({'predicted_salary': int(predicted_salary)})
 
-    # Make the prediction using the decision tree model
-    input_data = np.array([[age, weight]])
-    predicted_salary = decision_tree_model.predict(input_data)[0]
+# # Decision Trees
 
-    # Check if predicted salary is below zero and set it to zero if it is
-    predicted_salary = max(predicted_salary, 0)
+# # Create a decision tree regression model
+# decision_tree_model = DecisionTreeRegressor()
 
-    # Return the predicted salary as JSON response
-    return jsonify({'predicted_salary': int(predicted_salary)})
+# # Fit the decision tree model to the training data
+# decision_tree_model.fit(X_train, y_train)
 
-# Logistic Regression
+# # Route for predicting the salary with decision trees
+# @app.route('/predict-decision-tree', methods=['POST'])
+# def predict_decision_tree():
+#     # Retrieve the input data from the request
+#     age = float(request.json['age'])
+#     weight = float(request.json['weight'])
 
-# Create a logistic regression model
-logistic_model = LogisticRegression()
+#     # Make the prediction using the decision tree model
+#     input_data = np.array([[age, weight]])
+#     predicted_salary = decision_tree_model.predict(input_data)[0]
 
-# Fit the logistic regression model to the training data
-logistic_model.fit(X_train, y_train)
+#     # Check if predicted salary is below zero and set it to zero if it is
+#     predicted_salary = max(predicted_salary, 0)
 
-# Route for predicting the salary with logistic regression
-@app.route('/predict-logistic', methods=['POST'])
-def predict_logistic():
-    # Retrieve the input data from the request
-    age = float(request.json['age'])
-    weight = float(request.json['weight'])
+#     # Return the predicted salary as JSON response
+#     return jsonify({'predicted_salary': int(predicted_salary)})
 
-    # Make the prediction using the logistic regression model
-    input_data = np.array([[age, weight]])
-    predicted_salary = logistic_model.predict(input_data)[0]
+# # Logistic Regression
 
-    # Return the predicted salary as JSON response
-    return jsonify({'predicted_salary': int(predicted_salary)})
+# # Create a logistic regression model
+# logistic_model = LogisticRegression()
 
-# Route to serve the Data.csv file
-@app.route('/data', methods=['GET'])
-def get_data():
-    return send_from_directory('data', 'Data.csv', as_attachment=True)
+# # Fit the logistic regression model to the training data
+# logistic_model.fit(X_train, y_train)
+
+# # Route for predicting the salary with logistic regression
+# @app.route('/predict-logistic', methods=['POST'])
+# def predict_logistic():
+#     # Retrieve the input data from the request
+#     age = float(request.json['age'])
+#     weight = float(request.json['weight'])
+
+#     # Make the prediction using the logistic regression model
+#     input_data = np.array([[age, weight]])
+#     predicted_salary = logistic_model.predict(input_data)[0]
+
+#     # Return the predicted salary as JSON response
+#     return jsonify({'predicted_salary': int(predicted_salary)})
+
+# # Route to serve the Data.csv file
+# @app.route('/data', methods=['GET'])
+# def get_data():
+#     return send_from_directory('data', 'Data.csv', as_attachment=True)
 
 # Route for predicting with OpenAI integration
 @app.route('/openai-predict', methods=['POST'])
@@ -127,7 +128,7 @@ def openai_predict():
     }
 
     try:
-        response = requests.post('https://api.openai.com/v1/engines/davinci-codex/completions', headers=headers, data=json.dumps(data))
+        response = requests.post('https://api.openai.com/v1/completions', headers=headers, data=json.dumps(data))
         response.raise_for_status()  # This will raise an exception if the response contains an HTTP error status code
     except requests.exceptions.HTTPError as err:
         print(f"HTTP error occurred: {err}")  # or use your logger here
