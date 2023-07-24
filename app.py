@@ -6,6 +6,8 @@ from sklearn.linear_model import LogisticRegression
 from sklearn.model_selection import train_test_split
 from flask import Flask, request, jsonify, send_from_directory
 from flask_cors import CORS
+import requests
+import json
 
 # Load the data from CSV file
 data = pd.read_csv('./data/Data.csv')
@@ -97,6 +99,35 @@ def predict_logistic():
 @app.route('/data', methods=['GET'])
 def get_data():
     return send_from_directory('data', 'Data.csv', as_attachment=True)
+
+@app.route('/openai-predict', methods=['POST'])
+def openai_predict():
+    # Retrieve the input data from the request
+    age = float(request.json['age'])
+    weight = float(request.json['weight'])
+
+    # Prepare the data for the OpenAI API
+    data = {
+        'prompt': f'Age: {age}\nWeight: {weight}\nPredict: ',
+        'max_tokens': 60
+    }
+
+    headers = {
+        'Authorization': 'Bearer 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',
+        'Content-Type': 'application/json'
+    }
+
+    # Make the request to the OpenAI API
+    response = requests.post('https://api.openai.com/v4/engines/davinci-codex/completions', headers=headers, data=json.dumps(data))
+
+    # Parse the response from the OpenAI API
+    response_data = response.json()
+
+    # Get the predicted text from the OpenAI API response
+    predicted_text = response_data['choices'][0]['text'].strip()
+
+    # Return the predicted text as JSON response
+    return jsonify({'predicted_text': predicted_text})
 
 # Run the Flask app
 if __name__ == '__main__':
