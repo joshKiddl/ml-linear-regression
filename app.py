@@ -122,12 +122,19 @@ def openai_predict():
 
     # Make the request to the OpenAI API
     headers = {
-    'Authorization': f'Bearer {secret_key}',
-    'Content-Type': 'application/json'
+        'Authorization': f'Bearer {secret_key}',
+        'Content-Type': 'application/json'
     }
 
-    # Make the request to the OpenAI API
-    response = requests.post('https://api.openai.com/v4/engines/davinci-codex/completions', headers=headers, data=json.dumps(data))
+    try:
+        response = requests.post('https://api.openai.com/v1/engines/davinci-codex/completions', headers=headers, data=json.dumps(data))
+        response.raise_for_status()  # This will raise an exception if the response contains an HTTP error status code
+    except requests.exceptions.HTTPError as err:
+        print(f"HTTP error occurred: {err}")  # or use your logger here
+        return jsonify({'error': str(err)})
+    except Exception as err:
+        print(f"Other error occurred: {err}")  # or use your logger here
+        return jsonify({'error': str(err)})
 
     if response.status_code == 200:
         response_data = response.json()
@@ -137,15 +144,11 @@ def openai_predict():
             # Handle the situation where 'choices' is not in the response
             print("No 'choices' in API response")
             print(response_data)
+            return jsonify({'error': "No 'choices' in API response"})
     else:
         # Handle the situation where the API response is not a success
         print(f"API request failed with status code {response.status_code}")
-
-    # Parse the response from the OpenAI API
-    response_data = response.json()
-
-    # Get the predicted text from the OpenAI API response
-    predicted_text = response_data['choices'][0]['text'].strip()
+        return jsonify({'error': f"API request failed with status code {response.status_code}"})
 
     # Return the predicted text as JSON response
     return jsonify({'predicted_text': predicted_text})
