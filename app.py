@@ -8,6 +8,14 @@ from flask import Flask, request, jsonify, send_from_directory
 from flask_cors import CORS
 import requests
 import json
+from dotenv import load_dotenv
+import os
+
+# Load the .env file
+load_dotenv()
+
+# Get the secret key from the environment variables
+secret_key = os.getenv("SECRET_KEY")
 
 # Load the data from CSV file
 data = pd.read_csv('./data/Data.csv')
@@ -112,9 +120,10 @@ def openai_predict():
         'max_tokens': 60
     }
 
+    # Make the request to the OpenAI API
     headers = {
-        'Authorization': 'Bearer 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',
-        'Content-Type': 'application/json'
+    'Authorization': f'Bearer {secret_key}',
+    'Content-Type': 'application/json'
     }
 
     # Make the request to the OpenAI API
