@@ -117,6 +117,10 @@ def openai_predict():
     # Retrieve the input data from the request
     input_text = request.json['inputText']
 
+    # Prepend the desired string to the input text
+    prompt_string = "List 5 problem statements for the following problem. Keep each problem statement within 200 characters."
+    input_text = prompt_string + " " + input_text
+
     # Make the request to the OpenAI API using the openai.Completion.create() method
     response = openai.Completion.create(
         model="text-davinci-002",
