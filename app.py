@@ -119,7 +119,7 @@ def openai_predict():
 
     # Make the request to the OpenAI API using the openai.Completion.create() method
     response = openai.Completion.create(
-        engine="davinci-codex",
+        model="text-davinci-002",
         prompt=input_text,
         max_tokens=60
     )
