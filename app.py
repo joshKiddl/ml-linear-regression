@@ -117,28 +117,28 @@ def openai_predict():
     # Retrieve the input data from the request
     input_text = request.json['inputText']
 
-    # Preempt the input_text with the request statement
-    prompt = f"Give me 5 examples of Problem Statements for the following problem: {input_text}"
-
     # Make the request to the OpenAI API using the openai.Completion.create() method
     response = openai.Completion.create(
         model="text-davinci-002",
-        prompt=prompt,
+        prompt=input_text,
         max_tokens=60
     )
 
     # Check for errors in the response
     if 'choices' in response and len(response['choices']) > 0:
+        # Extract the predicted text from the API response
         predicted_text = response['choices'][0]['text'].strip()
+
+        # Split the predicted text into individual items if it's a list
+        predicted_items = predicted_text.split('\n')
+
+        # Return the predicted items as JSON response
+        return jsonify({'predicted_items': predicted_items})
     else:
         # Handle the situation where 'choices' is not in the response
         print("No 'choices' in API response")
         print(response)
         return jsonify({'error': "No 'choices' in API response"})
-
-    # Return the predicted text as JSON response
-    return jsonify({'predicted_text': predicted_text})
-
 
 # Run the Flask app
 if __name__ == '__main__':
