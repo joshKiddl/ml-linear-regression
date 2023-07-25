@@ -144,6 +144,38 @@ def openai_predict():
         print(response)
         return jsonify({'error': "No 'choices' in API response"})
 
+@app.route('/openai-solution', methods=['POST'])
+def openai_solution():
+    # Retrieve the input data from the request
+    problem_statement = request.json['problemStatement']
+
+    # Prepend or append the desired string to the problem statement
+    prompt_string = "Provide 5 really good solution hypotheses for the following solution hypothesis. Keep each problem statement within 200 characters. No line breaks."
+    input_text = prompt_string + " " + problem_statement
+
+    # Make the request to the OpenAI API using the openai.Completion.create() method
+    response = openai.Completion.create(
+        model="text-davinci-002",
+        prompt=input_text,
+        max_tokens=200
+    )
+
+    # Check for errors in the response
+    if 'choices' in response and len(response['choices']) > 0:
+        # Extract the predicted text from the API response
+        predicted_text = response['choices'][0]['text'].strip()
+
+        # Split the predicted text into individual solutions if it's a list
+        predicted_solutions = predicted_text.split('\n')
+
+        # Return the predicted solutions as JSON response
+        return jsonify({'predicted_solutions': predicted_solutions})
+    else:
+        # Handle the situation where 'choices' is not in the response
+        print("No 'choices' in API response")
+        print(response)
+        return jsonify({'error': "No 'choices' in API response"})
+
 # Run the Flask app
 if __name__ == '__main__':
     app.run()
