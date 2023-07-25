@@ -147,16 +147,16 @@ def openai_predict():
 @app.route('/openai-solution', methods=['POST'])
 def openai_solution():
     # Retrieve the input data from the request
-    problem_statement = request.json['problemStatement']
+    input_text = request.json['inputText']
 
     # Prepend or append the desired string to the problem statement
     prompt_string = "Provide 5 really good solution hypotheses for the following solution hypothesis. Keep each problem statement within 200 characters. No line breaks."
-    input_text = prompt_string + " " + problem_statement
+    problem_statement = prompt_string + " " + input_text
 
     # Make the request to the OpenAI API using the openai.Completion.create() method
     response = openai.Completion.create(
         model="text-davinci-002",
-        prompt=input_text,
+        prompt=problem_statement,
         max_tokens=200
     )
 
@@ -169,7 +169,7 @@ def openai_solution():
         predicted_solutions = predicted_text.split('\n')
 
         # Return the predicted solutions as JSON response
-        return jsonify({'predicted_solutions': predicted_solutions})
+        return jsonify({'predicted_items': predicted_solutions})
     else:
         # Handle the situation where 'choices' is not in the response
         print("No 'choices' in API response")
