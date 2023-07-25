@@ -118,7 +118,7 @@ def openai_predict():
     input_text = request.json['inputText']
 
     # Prepend the desired string to the input text
-    prompt_string = "List 5 problem statements for the following problem. Keep each problem statement within 200 characters. No line breaks."
+    prompt_string = "List 5 high quality problem statements based on the following problem, in a user story format from the agile software development framework. Make each item in the format As a <something>, I want to <do something>, so that <some outcome>. No line breaks. The problem is:"
     input_text = prompt_string + " " + input_text
 
     # Make the request to the OpenAI API using the openai.Completion.create() method
