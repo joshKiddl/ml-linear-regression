@@ -6,7 +6,6 @@ from flask_cors import CORS
 from dotenv import load_dotenv
 import os
 import openai
-from flask_pymongo import PyMongo
 
 # Load the .env file
 load_dotenv()
@@ -17,28 +16,6 @@ openai.api_key = os.getenv("SECRET_KEY")
 # Define the Flask app
 app = Flask(__name__)
 cors = CORS(app)
-mongo_uri = os.getenv("MONGO_URI")
-app.config["MONGO_URI"] = os.getenv("MONGO_URI")
-
-# Initialize PyMongo
-mongo = PyMongo(app)
-
-@app.route('/feedback-submit', methods=['POST'])
-def handle_feedback_submit():
-    try:
-        data = request.get_json()
-        print("Received data:", data)  # Print the received data
-        result = mongo.db.feedback.insert_one(data)
-        return jsonify({"_id": str(result.inserted_id)})
-    except Exception as e:
-        return jsonify({"error": str(e)})
-
-
-@app.route('/waitlist-submit', methods=['POST'])
-def handle_waitlist_submit():
-    data = request.get_json()
-    result = mongo.db.waitlist.insert_one(data)  # assuming 'waitlist' is the name of your collection
-    return jsonify({"_id": str(result.inserted_id)})
 
 # Route for predicting with OpenAI integration
 @app.route('/openai-predict', methods=['POST'])
