@@ -30,7 +30,7 @@ mongo = PyMongo(app)
 # Print the PyMongo object
 print("mongo:", mongo)
 
-@app.route('/feedback-submit', methods=['POST'])
+@app.route('https://ml-linear-regression.onrender.com/feedback-submit', methods=['POST'])
 def handle_feedback_submit():
     data = request.get_json()
     result = mongo.db.feedback.insert_one(data)  # assuming 'feedback' is the name of your collection
