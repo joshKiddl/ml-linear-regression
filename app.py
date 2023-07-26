@@ -8,7 +8,6 @@ import os
 import openai
 from flask_pymongo import PyMongo
 
-
 # Load the .env file
 load_dotenv()
 
@@ -19,7 +18,7 @@ openai.api_key = os.getenv("SECRET_KEY")
 app = Flask(__name__)
 cors = CORS(app)
 mongo_uri = os.getenv("MONGO_URI")
-app.config["MONGO_URI"] = mongo_uri
+app.config["MONGO_URI"] = os.getenv("MONGO_URI")
 mongo = PyMongo(app)
 
 @app.route('/feedback-submit', methods=['POST'])
