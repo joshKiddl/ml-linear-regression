@@ -20,21 +20,17 @@ cors = CORS(app)
 mongo_uri = os.getenv("MONGO_URI")
 app.config["MONGO_URI"] = os.getenv("MONGO_URI")
 
-# Print the MongoDB URIs
-print("mongo_uri:", mongo_uri)
-print("app.config['MONGO_URI']:", app.config["MONGO_URI"])
-
 # Initialize PyMongo
 mongo = PyMongo(app)
-
-# Print the PyMongo object
-print("mongo:", mongo)
 
 @app.route('/feedback-submit', methods=['POST'])
 def handle_feedback_submit():
     try:
         data = request.get_json()
-        result = mongo.db.feedback.insert_one(data)
+        # Try to access your collection this way:
+        feedback_collection = mongo.db['feedback']
+        print("feedback_collection:", feedback_collection)
+        result = mongo.db['feedback'].insert_one(data)  
         return jsonify({"_id": str(result.inserted_id)})
     except Exception as e:
         return jsonify({"error": str(e)})
