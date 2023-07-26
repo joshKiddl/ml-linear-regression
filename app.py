@@ -27,10 +27,8 @@ mongo = PyMongo(app)
 def handle_feedback_submit():
     try:
         data = request.get_json()
-        # Try to access your collection this way:
-        feedback_collection = mongo.db['feedback']
-        print("feedback_collection:", feedback_collection)
-        result = mongo.db['feedback'].insert_one(data)  
+        print("Received data:", data)  # Print the received data
+        result = mongo.db.feedback.insert_one(data)
         return jsonify({"_id": str(result.inserted_id)})
     except Exception as e:
         return jsonify({"error": str(e)})
