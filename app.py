@@ -56,7 +56,7 @@ def openai_solution():
     input_text = request.json['inputText']
 
     # Prepend or append the desired string to the problem statement
-    prompt_string = "Provide 5 really good solution hypotheses for the following solution hypothesis. Keep each problem statement within 200 characters. No line breaks."
+    prompt_string = "Provide 5 really good acceptance criteria for a feature that addresses the following user story. Keep each acceptance criteria within 200 characters. No line breaks."
     problem_statement = prompt_string + " " + input_text
 
     # Make the request to the OpenAI API using the openai.Completion.create() method
