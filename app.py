@@ -19,7 +19,16 @@ app = Flask(__name__)
 cors = CORS(app)
 mongo_uri = os.getenv("MONGO_URI")
 app.config["MONGO_URI"] = os.getenv("MONGO_URI")
+
+# Print the MongoDB URIs
+print("mongo_uri:", mongo_uri)
+print("app.config['MONGO_URI']:", app.config["MONGO_URI"])
+
+# Initialize PyMongo
 mongo = PyMongo(app)
+
+# Print the PyMongo object
+print("mongo:", mongo)
 
 @app.route('/feedback-submit', methods=['POST'])
 def handle_feedback_submit():
