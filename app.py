@@ -84,32 +84,24 @@ def openai_solution():
 
 @app.route('/technical-requirements', methods=['POST'])
 def technical_requirements():
-    # Retrieve the input data from the request
     input_text = request.json['inputText']
 
-    # Define the prompt string
+    # Preprocess input_text to split it into individual sentences
+    input_text_list = input_text.split(', ')
+    input_text = ' '.join(input_text_list)
+
     prompt_string = "Provide a set of relevant technical requirements, in a list format, that address the following user story. Keep the requirements within 200 characters. No line breaks: "
     problem_statement = prompt_string + " " + input_text
-
-    # Make the request to the OpenAI API using the openai.Completion.create() method
     response = openai.Completion.create(
         model="text-davinci-002",
         prompt=problem_statement,
         max_tokens=200
     )
-
-    # Check for errors in the response
     if 'choices' in response and len(response['choices']) > 0:
-        # Extract the predicted text from the API response
         predicted_text = response['choices'][0]['text'].strip()
-
-        # Split the predicted text into individual technical requirements if it's a list
         predicted_requirements = predicted_text.split('\n')
-
-        # Return the predicted technical requirements as JSON response
         return jsonify({'predicted_items': predicted_requirements})
     else:
-        # Handle the situation where 'choices' is not in the response
         print("No 'choices' in API response")
         print(response)
         return jsonify({'error': "No 'choices' in API response"})
