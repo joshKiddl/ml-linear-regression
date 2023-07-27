@@ -90,7 +90,7 @@ def technical_requirements():
     input_text_list = input_text.split(', ')
     input_text = ' '.join(input_text_list)
 
-    prompt_string = "Provide a set of relevant technical requirements, in a list format, that address the following user story. Keep the requirements within 200 characters. No line breaks: "
+    prompt_string = "Provide a set of relevant technical requirements, in a list format, that address the following Acceptance Criteria and User Story. Keep the requirements within 200 characters. No line breaks: "
     problem_statement = prompt_string + " " + input_text
     response = openai.Completion.create(
         model="text-davinci-002",
