@@ -56,7 +56,7 @@ def openai_solution():
     input_text = request.json['inputText']
 
     # Prepend or append the desired string to the problem statement
-    prompt_string = "Provide a single really good acceptance criterion that addresses the following user story. Keep the acceptance criterion within 200 characters. No line breaks: "
+    prompt_string = "Provide a selection of relevent really good acceptance criteria, in list format, that address the following user story. Keep the acceptance criteria within 200 characters. No line breaks: "
     problem_statement = prompt_string + " " + input_text
 
     # Make the request to the OpenAI API using the openai.Completion.create() method
@@ -76,6 +76,38 @@ def openai_solution():
 
         # Return the predicted solutions as JSON response
         return jsonify({'predicted_items': predicted_solutions})
+    else:
+        # Handle the situation where 'choices' is not in the response
+        print("No 'choices' in API response")
+        print(response)
+        return jsonify({'error': "No 'choices' in API response"})
+
+@app.route('/technical-requirements', methods=['POST'])
+def technical_requirements():
+    # Retrieve the input data from the request
+    input_text = request.json['inputText']
+
+    # Define the prompt string
+    prompt_string = "Provide a set of relevant technical requirements, in a list format, that address the following user story. Keep the requirements within 200 characters. No line breaks: "
+    problem_statement = prompt_string + " " + input_text
+
+    # Make the request to the OpenAI API using the openai.Completion.create() method
+    response = openai.Completion.create(
+        model="text-davinci-002",
+        prompt=problem_statement,
+        max_tokens=200
+    )
+
+    # Check for errors in the response
+    if 'choices' in response and len(response['choices']) > 0:
+        # Extract the predicted text from the API response
+        predicted_text = response['choices'][0]['text'].strip()
+
+        # Split the predicted text into individual technical requirements if it's a list
+        predicted_requirements = predicted_text.split('\n')
+
+        # Return the predicted technical requirements as JSON response
+        return jsonify({'predicted_items': predicted_requirements})
     else:
         # Handle the situation where 'choices' is not in the response
         print("No 'choices' in API response")
