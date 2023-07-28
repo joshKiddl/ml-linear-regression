@@ -90,7 +90,7 @@ def technical_requirements():
     input_text_list = input_text.split(', ')
     input_text = ' '.join(input_text_list)
 
-    prompt_string = "Provide a list of 20 possible relevant technical requirements, in a list format, that address the following User Story and it's following acceptance criteria. Keep the requirements within 200 characters. No line breaks: "
+    prompt_string = "Given the following user story and acceptance criteria, generate 10 high-quality technical requirements for agile software development, these are technical specifications that make sense when thinking about a solution for the user story proposed. Each requirement should be no more than 100 characters long, listed in bullet point format, without line breaks. The user story is:"
     problem_statement = prompt_string + " " + input_text
     response = openai.Completion.create(
         model="text-davinci-002",
