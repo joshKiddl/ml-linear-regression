@@ -31,7 +31,7 @@ def openai_predict():
     response = openai.Completion.create(
         model="text-davinci-002",
         prompt=input_text,
-        max_tokens=60
+        max_tokens=200
     )
 
     # Check for errors in the response
