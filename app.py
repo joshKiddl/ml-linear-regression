@@ -138,7 +138,7 @@ def targetCustomer():
     input_text_list = input_text.split(', ')
     input_text = ' '.join(input_text_list)
 
-    prompt_string = "Based on the following User Story, Acceptance Criteria, Technical Requirement, and Tasks, provide me with the most likely options of my target customer (k)eep them within 200 characters. No line breaks): "
+    prompt_string = "Based on the following User Story, Acceptance Criteria, Technical Requirement, and Tasks, provide me with the most likely options of my target customer (keep them within 200 characters. No line breaks): "
     problem_statement = prompt_string + " " + input_text
     response = openai.Completion.create(
         model="text-davinci-002",
