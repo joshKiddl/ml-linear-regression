@@ -178,6 +178,31 @@ def marketSize():
         print(response)
         return jsonify({'error': "No 'choices' in API response"})
     
+@app.route('/dataElements', methods=['POST'])
+def dataElements():
+    input_text = request.json['inputText']
+
+    # Preprocess input_text to split it into individual sentences
+    input_text_list = input_text.split(', ')
+    input_text = ' '.join(input_text_list)
+
+    prompt_string = "Based on the final problem statement, acceptance criteria, and target customer, give me the most important data metrics to consider for my feature (keep them within 200 characters. No line breaks): "
+    problem_statement = prompt_string + " " + input_text
+    response = openai.Completion.create(
+        model="text-davinci-002",
+        prompt=problem_statement,
+        max_tokens=200
+    )
+    if 'choices' in response and len(response['choices']) > 0:
+        predicted_text = response['choices'][0]['text'].strip()
+        predicted_requirements = predicted_text.split('\n')
+        return jsonify({'predicted_items': predicted_requirements})
+    else:
+        print("No 'choices' in API response")
+        print(response)
+        return jsonify({'error': "No 'choices' in API response"})
+    
+
 @app.route('/hypothesis', methods=['POST'])
 def hypothesis():
     input_text = request.json['inputText']
