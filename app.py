@@ -114,7 +114,7 @@ def tasks():
     input_text_list = input_text.split(', ')
     input_text = ' '.join(input_text_list)
 
-    prompt_string = "Provide a list of 20 possible technical tasks to create this feature, in a list format, that address the following User Story, it's following acceptance criteria and technical requirements. Keep the tasks within 200 characters. No line breaks: "
+    prompt_string = "Provide a list of 20 possible technical tasks to create this feature, They should all be seperate individual list items, that address the following User Story, it's following acceptance criteria and technical requirements. Keep the tasks within 200 characters. No line breaks: "
     problem_statement = prompt_string + " " + input_text
     response = openai.Completion.create(
         model="text-davinci-002",
