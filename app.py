@@ -162,7 +162,7 @@ def marketSize():
     input_text_list = input_text.split(', ')
     input_text = ' '.join(input_text_list)
 
-    prompt_string = "Given the following Target Customer/Market, give me the 3 most likely options for my target market size, most likely being at the top. It should be in the format of 'x people across x countries' Keep them within 100 characters. No line breaks): "
+    prompt_string = "Given the following Target Customer/Market, give me the 3 most likely options for my target market size, most likely being at the top. It should be in the format of 'x people across x countries' Keep them within 100 characters. No line breaks: "
     problem_statement = prompt_string + " " + input_text
     response = openai.Completion.create(
         model="text-davinci-002",
@@ -186,7 +186,7 @@ def dataElements():
     input_text_list = input_text.split(', ')
     input_text = ' '.join(input_text_list)
 
-    prompt_string = "Based on the final problem statement, acceptance criteria, and target customer, give me the most important data metrics to consider for my feature (keep them within 200 characters. No line breaks): "
+    prompt_string = "Given the following final problem statement, acceptance criteria, and target market, list for me the 5 important data metrics to consider for my feature. 100 character limit. No line breaks: "
     problem_statement = prompt_string + " " + input_text
     response = openai.Completion.create(
         model="text-davinci-002",
