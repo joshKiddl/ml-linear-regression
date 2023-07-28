@@ -90,7 +90,31 @@ def technical_requirements():
     input_text_list = input_text.split(', ')
     input_text = ' '.join(input_text_list)
 
-    prompt_string = "Provide a set of relevant technical requirements, in a list format, that address the following Acceptance Criteria and User Story. Keep the requirements within 200 characters. No line breaks: "
+    prompt_string = "Provide a list of 20 possible relevant technical requirements, in a list format, that address the following User Story and it's following acceptance criteria. Keep the requirements within 200 characters. No line breaks: "
+    problem_statement = prompt_string + " " + input_text
+    response = openai.Completion.create(
+        model="text-davinci-002",
+        prompt=problem_statement,
+        max_tokens=200
+    )
+    if 'choices' in response and len(response['choices']) > 0:
+        predicted_text = response['choices'][0]['text'].strip()
+        predicted_requirements = predicted_text.split('\n')
+        return jsonify({'predicted_items': predicted_requirements})
+    else:
+        print("No 'choices' in API response")
+        print(response)
+        return jsonify({'error': "No 'choices' in API response"})
+    
+@app.route('/tasks', methods=['POST'])
+def tasks():
+    input_text = request.json['inputText']
+
+    # Preprocess input_text to split it into individual sentences
+    input_text_list = input_text.split(', ')
+    input_text = ' '.join(input_text_list)
+
+    prompt_string = "Provide a list of 20 possible technical tasks to create this feature, in a list format, that address the following User Story, it's following acceptance criteria and technical requirements. Keep the tasks within 200 characters. No line breaks: "
     problem_statement = prompt_string + " " + input_text
     response = openai.Completion.create(
         model="text-davinci-002",
