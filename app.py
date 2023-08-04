@@ -260,7 +260,7 @@ def featureName():
     input_text_list = input_text.split(', ')
     input_text = ' '.join(input_text_list)
 
-    prompt_string = "Based on the user story, target customer, and solution hypothesis, provide me a list of potential Feature Names for this feature (keep them within 200 characters. seperate them with '/b'. do not include any dashes in the response): "
+    prompt_string = "Based on the user story, target customer, and solution hypothesis, provide me a list of potential Feature Names for this feature (keep them within 200 characters. do not include any dashes in the response): "
     problem_statement = prompt_string + " " + input_text
     response = openai.Completion.create(
         model="text-davinci-002",
