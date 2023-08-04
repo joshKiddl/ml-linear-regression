@@ -260,6 +260,9 @@ def marketingMaterial():
 def userStory():
     # Retrieve the input data from the request
     input_data = request.json['inputData']
+    
+    # Assign it to input_text
+    input_text = input_data
 
     # Prepend the desired string to the input text
     prompt_string = "Based on the following inputs, generate a list of 5 options for a potentially suitable User Story:"
