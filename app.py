@@ -275,7 +275,11 @@ def userStory():
         max_tokens=200
     )
 
-    # The rest of the code remains the same as in your existing function
+    # Extract the generated text from the API response
+    generated_text = response.choices[0].text.strip()
+
+    # Return the generated text in a JSON response
+    return jsonify({'generated_text': generated_text}), 200
 
 # Run the Flask app
 if __name__ == '__main__':
