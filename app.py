@@ -261,9 +261,6 @@ def userStory():
     # Retrieve the input data from the request
     input_data = request.json['inputData']
 
-    # Convert the input data to a string
-    input_text = ', '.join(input_data.values())
-
     # Prepend the desired string to the input text
     prompt_string = "Based on the following inputs, generate a list of 5 options for a potentially suitable User Story:"
     input_text = prompt_string + " " + input_text
