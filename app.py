@@ -257,7 +257,7 @@ def marketingMaterial():
 
 # Problem Statement
 @app.route('/user-story', methods=['POST'])
-def user_story():
+def userStory():
     # Retrieve the input data from the request
     input_data = request.json['inputData']
 
