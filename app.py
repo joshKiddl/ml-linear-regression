@@ -17,6 +17,8 @@ openai.api_key = os.getenv("SECRET_KEY")
 app = Flask(__name__)
 cors = CORS(app)
 
+# NEW USER FLOW
+
 # Route for predicting with OpenAI integration
 @app.route('/openai-predict', methods=['POST'])
 def openai_predict():
@@ -249,6 +251,31 @@ def marketingMaterial():
         print("No 'choices' in API response")
         print(response)
         return jsonify({'error': "No 'choices' in API response"})
+
+
+# CREATE FEATURE
+
+# Problem Statement
+@app.route('/user-story', methods=['POST'])
+def user_story():
+    # Retrieve the input data from the request
+    input_data = request.json['inputData']
+
+    # Convert the input data to a string
+    input_text = ', '.join(input_data.values())
+
+    # Prepend the desired string to the input text
+    prompt_string = "Based on the following inputs, generate a list of 5 options for a potentially suitable User Story:"
+    input_text = prompt_string + " " + input_text
+
+    # Make the request to the OpenAI API using the openai.Completion.create() method
+    response = openai.Completion.create(
+        model="text-davinci-002",
+        prompt=input_text,
+        max_tokens=200
+    )
+
+    # The rest of the code remains the same as in your existing function
 
 # Run the Flask app
 if __name__ == '__main__':
