@@ -58,7 +58,7 @@ def openai_solution():
     input_text = request.json['inputText']
 
     # Prepend or append the desired string to the problem statement
-    prompt_string = "Given the following user story, generate 10 high-quality acceptance criteria for agile software development. Each criterion should be no more than 100 characters long, listed in bullet point format, without line breaks. The user story is:"
+    prompt_string = "Given the following user story, generate 10 high-quality acceptance criteria for agile software development. Each criterion should be no more than 100 characters long, listed in bullet point format, without line breaks. Do no included dashes in the response. Do not repeat the User story in the response. The user story is:"
     problem_statement = prompt_string + " " + input_text
 
     # Make the request to the OpenAI API using the openai.Completion.create() method
