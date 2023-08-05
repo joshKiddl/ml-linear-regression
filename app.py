@@ -64,17 +64,20 @@ def openai_solution():
     prompt_string = "Given the following user story, generate 10 high-quality acceptance criteria for agile software development. Each criterion should be no more than 100 characters long, listed in bullet point format, without line breaks. Do no included dashes in the response. Do not repeat the User story in the response. The user story is:"
     problem_statement = prompt_string + " " + input_text
 
-    # Make the request to the OpenAI API using the openai.Completion.create() method
-    response = openai.Completion.create(
-        model="text-davinci-002",
-        prompt=problem_statement,
+    # Make the request to the OpenAI API using the openai.ChatCompletion.create() method
+    response = openai.ChatCompletion.create(
+        model="gpt-3.5-turbo",
+        messages=[
+            {"role": "system", "content": "You are a helpful assistant."},
+            {"role": "user", "content": problem_statement},
+        ],
         max_tokens=200
     )
 
     # Check for errors in the response
     if 'choices' in response and len(response['choices']) > 0:
         # Extract the predicted text from the API response
-        predicted_text = response['choices'][0]['text'].strip()
+        predicted_text = response['choices'][0]['message']['content'].strip()
 
         # Split the predicted text into individual solutions if it's a list
         predicted_solutions = predicted_text.split('\n')
