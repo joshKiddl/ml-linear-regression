@@ -31,7 +31,7 @@ def openai_predict():
 
     # Make the request to the OpenAI API using the openai.Completion.create() method
     response = openai.Completion.create(
-        model="gpt-4",
+        model="gpt-3.5-turbo",
         prompt=input_text,
         max_tokens=200
     )
