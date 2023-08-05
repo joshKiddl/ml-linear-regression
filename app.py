@@ -29,21 +29,20 @@ def openai_predict():
     prompt_string = "List 5 high quality problem statements based on the following problem, in a user story format from the agile software development framework. Make each item in the format As a <something>, I want to <do something>, so that <some outcome>. No line breaks. The problem is:"
     input_text = prompt_string + " " + input_text
 
-    # Make the request to the OpenAI API using the openai.Completion.create() method
+    # Make the request to the OpenAI API using the openai.ChatCompletion.create() method
     response = openai.ChatCompletion.create(
-    model="gpt-3.5-turbo",
-    messages=[
-        {"role": "system", "content": "You are a helpful assistant."},
-        {"role": "user", "content": input_text},
-    ],
-    max_tokens=200
-)
-
+        model="gpt-3.5-turbo",
+        messages=[
+            {"role": "system", "content": "You are a helpful assistant."},
+            {"role": "user", "content": input_text},
+        ],
+        max_tokens=200
+    )
 
     # Check for errors in the response
     if 'choices' in response and len(response['choices']) > 0:
         # Extract the predicted text from the API response
-        predicted_text = response['choices'][0]['text'].strip()
+        predicted_text = response['choices'][0]['message']['content'].strip()
 
         # Split the predicted text into individual items if it's a list
         predicted_items = predicted_text.split('\n')
