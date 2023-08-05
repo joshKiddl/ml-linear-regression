@@ -30,11 +30,15 @@ def openai_predict():
     input_text = prompt_string + " " + input_text
 
     # Make the request to the OpenAI API using the openai.Completion.create() method
-    response = openai.Completion.create(
-        model="gpt-3.5-turbo",
-        prompt=input_text,
-        max_tokens=200
-    )
+    response = openai.ChatCompletion.create(
+    model="gpt-3.5-turbo",
+    messages=[
+        {"role": "system", "content": "You are a helpful assistant."},
+        {"role": "user", "content": input_text},
+    ],
+    max_tokens=200
+)
+
 
     # Check for errors in the response
     if 'choices' in response and len(response['choices']) > 0:
