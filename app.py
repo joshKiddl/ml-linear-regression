@@ -33,7 +33,6 @@ def openai_predict():
     response = openai.ChatCompletion.create(
         model="gpt-4",
         messages=[
-            {"role": "system", "content": "You are a helpful assistant."},
             {"role": "user", "content": input_text},
         ],
         max_tokens=200
@@ -61,14 +60,13 @@ def openai_solution():
     input_text = request.json['inputText']
 
     # Prepend or append the desired string to the problem statement
-    prompt_string = "Given the following user story, generate 10 high-quality acceptance criteria for agile software development. Each criterion should be no more than 100 characters long, listed in bullet point format, without line breaks. Do no included dashes in the response. Do not repeat the User story in the response. The user story is:"
+    prompt_string = "Given the following user story, generate 5 high-quality acceptance criteria for agile software development. Each criterion should be no more than 100 characters long, in a list format. Only include the list in your response, no other text. The user story is:"
     problem_statement = prompt_string + " " + input_text
 
     # Make the request to the OpenAI API using the openai.ChatCompletion.create() method
     response = openai.ChatCompletion.create(
-        model="gpt-3.5-turbo",
+        model="gpt-4",
         messages=[
-            {"role": "system", "content": "You are a helpful assistant."},
             {"role": "user", "content": problem_statement},
         ],
         max_tokens=200
