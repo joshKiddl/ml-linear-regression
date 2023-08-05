@@ -31,7 +31,7 @@ def openai_predict():
 
     # Make the request to the OpenAI API using the openai.ChatCompletion.create() method
     response = openai.ChatCompletion.create(
-        model="gpt-3.5-turbo",
+        model="gpt-4",
         messages=[
             {"role": "system", "content": "You are a helpful assistant."},
             {"role": "user", "content": input_text},
