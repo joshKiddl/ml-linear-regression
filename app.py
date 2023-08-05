@@ -160,17 +160,20 @@ def targetCustomer():
     problem_statement = prompt_string + " " + input_text
     response = openai.ChatCompletion.create(
         model="gpt-4",  # Assuming the model's name
-        prompt=problem_statement,
+        messages=[
+            {"role": "user", "content": problem_statement},
+        ],
         max_tokens=200
     )
     if 'choices' in response and len(response['choices']) > 0:
-        predicted_text = response['choices'][0]['text'].strip()
+        predicted_text = response['choices'][0]['message']['content'].strip()
         predicted_requirements = predicted_text.split('\n')
         return jsonify({'predicted_items': predicted_requirements})
     else:
         print("No 'choices' in API response")
         print(response)
         return jsonify({'error': "No 'choices' in API response"})
+
     
 # @app.route('/marketSize', methods=['POST'])
 # def marketSize():
