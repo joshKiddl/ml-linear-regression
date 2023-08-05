@@ -88,29 +88,29 @@ def openai_solution():
         print(response)
         return jsonify({'error': "No 'choices' in API response"})
 
-@app.route('/technical-requirements', methods=['POST'])
-def technical_requirements():
-    input_text = request.json['inputText']
+# @app.route('/technical-requirements', methods=['POST'])
+# def technical_requirements():
+#     input_text = request.json['inputText']
 
-    # Preprocess input_text to split it into individual sentences
-    input_text_list = input_text.split(', ')
-    input_text = ' '.join(input_text_list)
+#     # Preprocess input_text to split it into individual sentences
+#     input_text_list = input_text.split(', ')
+#     input_text = ' '.join(input_text_list)
 
-    prompt_string = "Given the following user story and acceptance criteria, generate a list of 10 high-quality technical requirements as suggestions for developing this solution. Each requirement should be no more than 100 characters long, listed in bullet point format. Without line breaks. There should be no empty lines. The user stories and acceptance criteria are:"
-    problem_statement = prompt_string + " " + input_text
-    response = openai.Completion.create(
-        model="text-davinci-002",
-        prompt=problem_statement,
-        max_tokens=200
-    )
-    if 'choices' in response and len(response['choices']) > 0:
-        predicted_text = response['choices'][0]['text'].strip()
-        predicted_requirements = predicted_text.split('\n')
-        return jsonify({'predicted_items': predicted_requirements})
-    else:
-        print("No 'choices' in API response")
-        print(response)
-        return jsonify({'error': "No 'choices' in API response"})
+#     prompt_string = "Given the following user story and acceptance criteria, generate a list of 10 high-quality technical requirements as suggestions for developing this solution. Each requirement should be no more than 100 characters long, in a list format. Only include the list in your response, no other text. The user stories and acceptance criteria are:"
+#     problem_statement = prompt_string + " " + input_text
+#     response = openai.Completion.create(
+#         model="text-davinci-002",
+#         prompt=problem_statement,
+#         max_tokens=200
+#     )
+#     if 'choices' in response and len(response['choices']) > 0:
+#         predicted_text = response['choices'][0]['text'].strip()
+#         predicted_requirements = predicted_text.split('\n')
+#         return jsonify({'predicted_items': predicted_requirements})
+#     else:
+#         print("No 'choices' in API response")
+#         print(response)
+#         return jsonify({'error': "No 'choices' in API response"})
     
 @app.route('/tasks', methods=['POST'])
 def tasks():
@@ -120,21 +120,34 @@ def tasks():
     input_text_list = input_text.split(', ')
     input_text = ' '.join(input_text_list)
 
-    prompt_string = "Given the following acceptance criteria and technical requirements, provide a list of 10 detailed programming tasks that would be needed to build the digital solution. Keep the tasks within 200 characters. No line breaks. No empty lines: "
+    prompt_string = "Given the following acceptance criteria and technical requirements, provide a list of 10 detailed programming tasks that would be needed to build the digital solution. Each item should be no more than 100 characters long, in a list format. Only include the list in your response, no other text: "
     problem_statement = prompt_string + " " + input_text
-    response = openai.Completion.create(
-        model="text-davinci-002",
-        prompt=problem_statement,
+
+    # Make the request to the OpenAI API using the openai.ChatCompletion.create() method
+    response = openai.ChatCompletion.create(
+        model="gpt-4",
+        messages=[
+            {"role": "user", "content": problem_statement},
+        ],
         max_tokens=200
     )
+
+    # Check for errors in the response
     if 'choices' in response and len(response['choices']) > 0:
-        predicted_text = response['choices'][0]['text'].strip()
-        predicted_requirements = predicted_text.split('\n')
-        return jsonify({'predicted_items': predicted_requirements})
+        # Extract the predicted text from the API response
+        predicted_text = response['choices'][0]['message']['content'].strip()
+
+        # Split the predicted text into individual tasks if it's a list
+        predicted_tasks = predicted_text.split('\n')
+
+        # Return the predicted tasks as JSON response
+        return jsonify({'predicted_items': predicted_tasks})
     else:
+        # Handle the situation where 'choices' is not in the response
         print("No 'choices' in API response")
         print(response)
         return jsonify({'error': "No 'choices' in API response"})
+
     
 @app.route('/targetCustomer', methods=['POST'])
 def targetCustomer():
@@ -144,10 +157,10 @@ def targetCustomer():
     input_text_list = input_text.split(', ')
     input_text = ' '.join(input_text_list)
 
-    prompt_string = "Based on the following User Story, Acceptance Criteria, Technical Requirement, and Tasks, provide me with the most likely options of my who my target customer is (keep them within 200 characters. No line breaks): "
+    prompt_string = "Based on the following User Story, Acceptance Criteria, Technical Requirement, and Tasks, provide me with the most likely options of my who my target customer is. Each item should be no more than 100 characters long, in a list format. Only include the list in your response, no other text: "
     problem_statement = prompt_string + " " + input_text
     response = openai.Completion.create(
-        model="text-davinci-002",
+        model="gpt-4",  # Assuming the model's name
         prompt=problem_statement,
         max_tokens=200
     )
@@ -160,29 +173,29 @@ def targetCustomer():
         print(response)
         return jsonify({'error': "No 'choices' in API response"})
     
-@app.route('/marketSize', methods=['POST'])
-def marketSize():
-    input_text = request.json['inputText']
+# @app.route('/marketSize', methods=['POST'])
+# def marketSize():
+#     input_text = request.json['inputText']
 
-    # Preprocess input_text to split it into individual sentences
-    input_text_list = input_text.split(', ')
-    input_text = ' '.join(input_text_list)
+#     # Preprocess input_text to split it into individual sentences
+#     input_text_list = input_text.split(', ')
+#     input_text = ' '.join(input_text_list)
 
-    prompt_string = "Given the following Target Customer/Market, give me the 3 most likely options for my target market size, most likely being at the top. It should be in the format of 'x people across x countries' Keep them within 100 characters. No line breaks: "
-    problem_statement = prompt_string + " " + input_text
-    response = openai.Completion.create(
-        model="text-davinci-002",
-        prompt=problem_statement,
-        max_tokens=200
-    )
-    if 'choices' in response and len(response['choices']) > 0:
-        predicted_text = response['choices'][0]['text'].strip()
-        predicted_requirements = predicted_text.split('\n')
-        return jsonify({'predicted_items': predicted_requirements})
-    else:
-        print("No 'choices' in API response")
-        print(response)
-        return jsonify({'error': "No 'choices' in API response"})
+#     prompt_string = "Given the following Target Customer, give me the market size, most likely being at the top. It should be in the format of 'x people across x countries' Keep them within 100 characters. No line breaks: "
+#     problem_statement = prompt_string + " " + input_text
+#     response = openai.Completion.create(
+#         model="gpt-4",  # Assuming the model's name
+#         prompt=problem_statement,
+#         max_tokens=200
+#     )
+#     if 'choices' in response and len(response['choices']) > 0:
+#         predicted_text = response['choices'][0]['text'].strip()
+#         predicted_requirements = predicted_text.split('\n')
+#         return jsonify({'predicted_items': predicted_requirements})
+#     else:
+#         print("No 'choices' in API response")
+#         print(response)
+#         return jsonify({'error': "No 'choices' in API response"})
     
 @app.route('/dataElements', methods=['POST'])
 def dataElements():
@@ -192,10 +205,10 @@ def dataElements():
     input_text_list = input_text.split(', ')
     input_text = ' '.join(input_text_list)
 
-    prompt_string = "Given the following final problem statement, acceptance criteria, and target market, list for me the 5 important data metrics to consider for my feature. 100 character limit. No line breaks: "
+    prompt_string = "Given the following final problem statement, acceptance criteria, and target market, list for me the 5 important data metrics to consider for my feature. Each item should be no more than 100 characters long, in a list format. Only include the list in your response, no other text: "
     problem_statement = prompt_string + " " + input_text
     response = openai.Completion.create(
-        model="text-davinci-002",
+        model="gpt-4",  # Assuming the model's name
         prompt=problem_statement,
         max_tokens=200
     )
@@ -207,7 +220,7 @@ def dataElements():
         print("No 'choices' in API response")
         print(response)
         return jsonify({'error': "No 'choices' in API response"})
-    
+
 @app.route('/hypothesis', methods=['POST'])
 def hypothesis():
     input_text = request.json['inputText']
@@ -219,7 +232,7 @@ def hypothesis():
     prompt_string = "Based on the finalProblemStatement, the acceptanceCriteria and the targetCustomer, give me a solution hypothesis for this feature, in the format: 'X amount / percent of Target market / persona can do something / specific metric of the solution. No line breaks): "
     problem_statement = prompt_string + " " + input_text
     response = openai.Completion.create(
-        model="text-davinci-002",
+        model="gpt-4",  # Assuming the model's name
         prompt=problem_statement,
         max_tokens=200
     )
@@ -240,10 +253,10 @@ def marketingMaterial():
     input_text_list = input_text.split(', ')
     input_text = ' '.join(input_text_list)
 
-    prompt_string = "Based on the target customer, market size, and solution hypotheses, provide me a list of potential marketing materials for this feature (keep them within 200 characters. No line breaks): "
+    prompt_string = "Based on the target customer, market size, and solution hypotheses, provide me a list of potential marketing materials for this feature. Example 1: 'Blog: <title>', Example 2: 'Email: <Subject Line>, Example 3: 'Social Post: <Summary>. Each item should be no more than 200 characters long, in a list format. Only include the list in your response, no other text: "
     problem_statement = prompt_string + " " + input_text
     response = openai.Completion.create(
-        model="text-davinci-002",
+        model="gpt-4",  # Assuming the model's name
         prompt=problem_statement,
         max_tokens=200
     )
@@ -264,10 +277,10 @@ def featureName():
     input_text_list = input_text.split(', ')
     input_text = ' '.join(input_text_list)
 
-    prompt_string = "Based on the user story, target customer, and solution hypothesis, provide me a list of potential Feature Names for this feature (keep them within 200 characters. do not include any dashes in the response): "
+    prompt_string = "Based on the user story, target customer, and solution hypothesis, provide me a list of potential Feature Names for this feature. Each item should be no more than 4 words long, capitalised, in a list format. Only include the list in your response, no other text: "
     problem_statement = prompt_string + " " + input_text
     response = openai.Completion.create(
-        model="text-davinci-002",
+        model="gpt-4",  # Assuming the model's name
         prompt=problem_statement,
         max_tokens=200
     )
@@ -279,7 +292,6 @@ def featureName():
         print("No 'choices' in API response")
         print(response)
         return jsonify({'error': "No 'choices' in API response"})
-
 
 # CREATE FEATURE
 
