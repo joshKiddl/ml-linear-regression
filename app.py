@@ -6,6 +6,8 @@ from flask_cors import CORS
 from dotenv import load_dotenv
 import os
 import openai
+from jira import JIRA
+import requests
 
 # Load the .env file
 load_dotenv()
@@ -87,30 +89,6 @@ def openai_solution():
         print("No 'choices' in API response")
         print(response)
         return jsonify({'error': "No 'choices' in API response"})
-
-# @app.route('/technical-requirements', methods=['POST'])
-# def technical_requirements():
-#     input_text = request.json['inputText']
-
-#     # Preprocess input_text to split it into individual sentences
-#     input_text_list = input_text.split(', ')
-#     input_text = ' '.join(input_text_list)
-
-#     prompt_string = "Given the following user story and acceptance criteria, generate a list of 10 high-quality technical requirements as suggestions for developing this solution. Each requirement should be no more than 100 characters long, in a list format. Only include the list in your response, no other text. The user stories and acceptance criteria are:"
-#     problem_statement = prompt_string + " " + input_text
-#     response = openai.Completion.create(
-#         model="text-davinci-002",
-#         prompt=problem_statement,
-#         max_tokens=200
-#     )
-#     if 'choices' in response and len(response['choices']) > 0:
-#         predicted_text = response['choices'][0]['text'].strip()
-#         predicted_requirements = predicted_text.split('\n')
-#         return jsonify({'predicted_items': predicted_requirements})
-#     else:
-#         print("No 'choices' in API response")
-#         print(response)
-#         return jsonify({'error': "No 'choices' in API response"})
     
 @app.route('/tasks', methods=['POST'])
 def tasks():
@@ -174,31 +152,6 @@ def targetCustomer():
         print(response)
         return jsonify({'error': "No 'choices' in API response"})
 
-    
-# @app.route('/marketSize', methods=['POST'])
-# def marketSize():
-#     input_text = request.json['inputText']
-
-#     # Preprocess input_text to split it into individual sentences
-#     input_text_list = input_text.split(', ')
-#     input_text = ' '.join(input_text_list)
-
-#     prompt_string = "Given the following Target Customer, give me the market size, most likely being at the top. It should be in the format of 'x people across x countries' Keep them within 100 characters. No line breaks: "
-#     problem_statement = prompt_string + " " + input_text
-#     response = openai.Completion.create(
-#         model="gpt-4",  # Assuming the model's name
-#         prompt=problem_statement,
-#         max_tokens=200
-#     )
-#     if 'choices' in response and len(response['choices']) > 0:
-#         predicted_text = response['choices'][0]['text'].strip()
-#         predicted_requirements = predicted_text.split('\n')
-#         return jsonify({'predicted_items': predicted_requirements})
-#     else:
-#         print("No 'choices' in API response")
-#         print(response)
-#         return jsonify({'error': "No 'choices' in API response"})
-    
 @app.route('/dataElements', methods=['POST'])
 def dataElements():
     input_text = request.json['inputText']
@@ -330,6 +283,43 @@ def userStory():
 
     # Return the generated text in a JSON response
     return jsonify({'generated_text': generated_text}), 200
+
+# Connect to Jira
+JIRA_URL = "https://joshsparkes.atlassian.net/rest/api/2/issue/"
+JIRA_API_TOKEN = os.getenv('JIRA_API_TOKEN')  # Fetch JIRA_API_TOKEN from .env
+JIRA_USER_EMAIL = "joshsparkes6@gmail.com"  # Replace with your Jira account email
+
+headers = {
+    "Authorization": f"Bearer {JIRA_API_TOKEN}",
+    "Content-Type": "application/json",
+    "Accept": "application/json"
+}
+
+@app.route('/create-jira-issue', methods=['POST'])
+def create_jira_issue():
+    data = request.json
+    project_key = data.get('project_key')
+    summary = data.get('summary')
+    description = data.get('description')
+    payload = {
+        "fields": {
+            "project": {
+                "key": project_key
+            },
+            "summary": summary,
+            "description": description,
+            "issuetype": {
+                "name": "Task"
+            }
+        }
+    }
+
+    response = requests.post(JIRA_URL, headers=headers, json=payload)
+
+    if response.status_code == 201:
+        return jsonify(response.json()), 201
+    else:
+        return jsonify({"error": "Failed to create Jira issue", "details": response.text}), 400
 
 # Run the Flask app
 if __name__ == '__main__':
