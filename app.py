@@ -287,7 +287,6 @@ def userStory():
 # Connect to Jira
 JIRA_URL = "https://joshsparkes.atlassian.net/rest/api/2/issue/"
 JIRA_API_TOKEN = os.getenv('JIRA_API_TOKEN')  # Fetch JIRA_API_TOKEN from .env
-print(JIRA_API_TOKEN)  # Add this line for debugging. Remove after confirming.
 JIRA_USER_EMAIL = "joshsparkes6@gmail.com"  # Replace with your Jira account email
 
 headers = {
