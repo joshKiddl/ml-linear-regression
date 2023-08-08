@@ -255,6 +255,32 @@ def featureName():
         print("No 'choices' in API response")
         print(response)
         return jsonify({'error': "No 'choices' in API response"})
+    
+@app.route('/whats-next', methods=['POST'])
+def whatsNext():
+    input_text = request.json['inputText']
+
+    # Preprocess input_text to split it into individual sentences
+    input_text_list = input_text.split(', ')
+    input_text = ' '.join(input_text_list)
+
+    prompt_string = "This is what i have so far in the product management process for my new feature, what should i do next?: "
+    problem_statement = prompt_string + " " + input_text
+    response = openai.ChatCompletion.create(
+        model="gpt-4",  # Assuming the model's name
+        messages=[
+            {"role": "user", "content": problem_statement},
+        ],
+        max_tokens=200
+    )
+    if 'choices' in response and len(response['choices']) > 0:
+        predicted_text = response['choices'][0]['message']['content'].strip()
+        predicted_requirements = predicted_text.split('\n')
+        return jsonify({'predicted_items': predicted_requirements})
+    else:
+        print("No 'choices' in API response")
+        print(response)
+        return jsonify({'error': "No 'choices' in API response"})
 
 # CREATE FEATURE
 
