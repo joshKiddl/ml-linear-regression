@@ -290,7 +290,7 @@ def FeatureAssess():
     input_text_list = input_text.split(', ')
     input_text = ' '.join(input_text_list)
 
-    prompt_string = "This is what i have so far for my new feature. Please critically assess the feature, tell me the Strengths, Weaknessess, Threats and Opportunities: "
+    prompt_string = "This is what i have so far for my new feature. Please critically assess the feature, tell me the top 2 most important Strengths, 2 Weaknessess, 2 Threats and 2 Opportunities: "
     problem_statement = prompt_string + " " + input_text
     response = openai.ChatCompletion.create(
         model="gpt-4",  # Assuming the model's name
