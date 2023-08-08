@@ -186,7 +186,7 @@ def hypothesis():
     input_text_list = input_text.split(', ')
     input_text = ' '.join(input_text_list)
 
-    prompt_string = "Based on the finalProblemStatement, the acceptanceCriteria and the targetCustomer, give me a solution hypothesis for this feature, in the format: 'X amount / percent of Target market / persona can do something / specific metric of the solution. No line breaks): "
+    prompt_string = "Based on the finalProblemStatement, the Data Elements, the acceptanceCriteria and the targetCustomer, give me 5 potential solution hypotheses for this feature. Incorporate one of the Metrics in the format: 'X amount / percent of Target market / persona can do something / specific metric of the solution. No line breaks): "
     problem_statement = prompt_string + " " + input_text
     response = openai.ChatCompletion.create(
         model="gpt-4",  # Assuming the model's name
