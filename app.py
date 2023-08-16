@@ -316,7 +316,7 @@ def TaskList():
     input_text_list = input_text.split(', ')
     input_text = ' '.join(input_text_list)
 
-    prompt_string = "Given the following activity, generate me a 10 item task list of how I can get this activity done:"
+    prompt_string = "Given the following activity, generate me a 5 item task list of how I can get this activity done:"
     problem_statement = prompt_string + " " + input_text
     response = openai.ChatCompletion.create(
         model="gpt-4",  # Assuming the model's name
