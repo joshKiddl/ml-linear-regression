@@ -264,7 +264,7 @@ def whatsNext():
     input_text_list = input_text.split(', ')
     input_text = ' '.join(input_text_list)
 
-    prompt_string = "This is what i have so far in the product management process for my new feature, what should i do next?: "
+    prompt_string = "This is what i have so far in the product management process for my new feature, what should i do next? Provide this in list format, only provide the list items, no other commentary: "
     problem_statement = prompt_string + " " + input_text
     response = openai.ChatCompletion.create(
         model="gpt-4",  # Assuming the model's name
