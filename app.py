@@ -368,7 +368,7 @@ def BlogPost():
     input_text_list = input_text.split(', ')
     input_text = ' '.join(input_text_list)
 
-    prompt_string = "Based on the target customer, market size, and solution hypotheses, provide me with a blog post I could use to communicate the feature. Make it 300 words maximum. It needs to be all in one returned item, not seperate paragraphs. Only include the post content in your response, no other text:"
+    prompt_string = "Based on the target customer, market size, and solution hypotheses, provide me with a blog post I could use to communicate the feature. Make it 300 words maximum. Make this all return on 1 paragraph. Only include the post content in your response, no other text: "
     problem_statement = prompt_string + " " + input_text
     response = openai.ChatCompletion.create(
         model="gpt-4",  # Assuming the model's name
@@ -394,7 +394,7 @@ def EmailPost():
     input_text_list = input_text.split(', ')
     input_text = ' '.join(input_text_list)
 
-    prompt_string = "Based on the target customer, market size, and solution hypotheses, provide me with an email content I could use to communicate the feature. Make it 500 characters maximum. It needs to be all in one returned item, not seperate paragraphs. Only include the email content in your response, no other text:"
+    prompt_string = "Based on the target customer, market size, and solution hypotheses, provide me with an email content I could use to communicate the feature. Make it 800 characters maximum. Make this all return in 1 paragraph. Only include the email content in your response, no other text: "
     problem_statement = prompt_string + " " + input_text
     response = openai.ChatCompletion.create(
         model="gpt-4",  # Assuming the model's name
