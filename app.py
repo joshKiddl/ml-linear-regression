@@ -359,6 +359,58 @@ def SocialPost():
         print("No 'choices' in API response")
         print(response)
         return jsonify({'error': "No 'choices' in API response"})
+    
+@app.route('/blog-post', methods=['POST'])
+def BlogPost():
+    input_text = request.json['inputText']
+
+    # Preprocess input_text to split it into individual sentences
+    input_text_list = input_text.split(', ')
+    input_text = ' '.join(input_text_list)
+
+    prompt_string = "Based on the target customer, market size, and solution hypotheses, provide me with a blog post I could use to communicate the feature. Make it 300 words maximum. Only include the post content in your response, no other text:"
+    problem_statement = prompt_string + " " + input_text
+    response = openai.ChatCompletion.create(
+        model="gpt-4",  # Assuming the model's name
+        messages=[
+            {"role": "user", "content": problem_statement},
+        ],
+        max_tokens=200
+    )
+    if 'choices' in response and len(response['choices']) > 0:
+        predicted_text = response['choices'][0]['message']['content'].strip()
+        predicted_requirements = predicted_text.split('\n')
+        return jsonify({'predicted_items': predicted_requirements})
+    else:
+        print("No 'choices' in API response")
+        print(response)
+        return jsonify({'error': "No 'choices' in API response"})
+
+@app.route('/email-post', methods=['POST'])
+def EmailPost():
+    input_text = request.json['inputText']
+
+    # Preprocess input_text to split it into individual sentences
+    input_text_list = input_text.split(', ')
+    input_text = ' '.join(input_text_list)
+
+    prompt_string = "Based on the target customer, market size, and solution hypotheses, provide me with an email content I could use to communicate the feature. Make it 500 characters maximum. Only include the email content in your response, no other text:"
+    problem_statement = prompt_string + " " + input_text
+    response = openai.ChatCompletion.create(
+        model="gpt-4",  # Assuming the model's name
+        messages=[
+            {"role": "user", "content": problem_statement},
+        ],
+        max_tokens=200
+    )
+    if 'choices' in response and len(response['choices']) > 0:
+        predicted_text = response['choices'][0]['message']['content'].strip()
+        predicted_requirements = predicted_text.split('\n')
+        return jsonify({'predicted_items': predicted_requirements})
+    else:
+        print("No 'choices' in API response")
+        print(response)
+        return jsonify({'error': "No 'choices' in API response"})
 
 # Run the Flask app
 if __name__ == '__main__':
