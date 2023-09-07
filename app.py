@@ -334,70 +334,31 @@ def TaskList():
         print(response)
         return jsonify({'error': "No 'choices' in API response"})
 
-# CREATE FEATURE
+@app.route('/social-post', methods=['POST'])
+def SocialPost():
+    input_text = request.json['inputText']
 
-# Problem Statement
-# @app.route('/user-story', methods=['POST'])
-# def userStory():
-#     # Retrieve the input data from the request
-#     input_data = request.json['inputData']
-    
-#     # Assign it to input_text
-#     input_text = input_data
+    # Preprocess input_text to split it into individual sentences
+    input_text_list = input_text.split(', ')
+    input_text = ' '.join(input_text_list)
 
-#     # Prepend the desired string to the input text
-#     prompt_string = "Based on the following inputs, generate a list of 5 options for a potentially suitable User Story:"
-#     input_text = prompt_string + " " + input_text
-
-#     # Make the request to the OpenAI API using the openai.Completion.create() method
-#     response = openai.Completion.create(
-#         model="text-davinci-002",
-#         prompt=input_text,
-#         max_tokens=200
-#     )
-
-#     # Extract the generated text from the API response
-#     generated_text = response.choices[0].text.strip()
-
-#     # Return the generated text in a JSON response
-#     return jsonify({'generated_text': generated_text}), 200
-
-# # Connect to Jira
-# JIRA_URL = "https://joshsparkes.atlassian.net/rest/api/2/issue/"
-# JIRA_API_TOKEN = os.getenv('JIRA_API_TOKEN')  # Fetch JIRA_API_TOKEN from .env
-# JIRA_USER_EMAIL = "joshsparkes6@gmail.com"  # Replace with your Jira account email
-
-# headers = {
-#     "Authorization": f"Bearer {JIRA_API_TOKEN}",
-#     "Content-Type": "application/json",
-#     "Accept": "application/json"
-# }
-
-# @app.route('/create-jira-issue', methods=['POST'])
-# def create_jira_issue():
-#     data = request.json
-#     project_key = data.get('project_key')
-#     summary = data.get('summary')
-#     description = data.get('description')
-#     payload = {
-#         "fields": {
-#             "project": {
-#                 "key": project_key
-#             },
-#             "summary": summary,
-#             "description": description,
-#             "issuetype": {
-#                 "name": "Task"
-#             }
-#         }
-#     }
-
-#     response = requests.post(JIRA_URL, headers=headers, json=payload)
-
-#     if response.status_code == 201:
-#         return jsonify(response.json()), 201
-#     else:
-#         return jsonify({"error": "Failed to create Jira issue", "details": response.text}), 400
+    prompt_string = "Based on the target customer, market size, and solution hypotheses, provide me with a social media post content I could use to communicate the feature. Make it 400 characters maximum. Only include the post content in your response, no other text:"
+    problem_statement = prompt_string + " " + input_text
+    response = openai.ChatCompletion.create(
+        model="gpt-4",  # Assuming the model's name
+        messages=[
+            {"role": "user", "content": problem_statement},
+        ],
+        max_tokens=200
+    )
+    if 'choices' in response and len(response['choices']) > 0:
+        predicted_text = response['choices'][0]['message']['content'].strip()
+        predicted_requirements = predicted_text.split('\n')
+        return jsonify({'predicted_items': predicted_requirements})
+    else:
+        print("No 'choices' in API response")
+        print(response)
+        return jsonify({'error': "No 'choices' in API response"})
 
 # Run the Flask app
 if __name__ == '__main__':
