@@ -375,7 +375,7 @@ def BlogPost():
         messages=[
             {"role": "user", "content": problem_statement},
         ],
-        max_tokens=200
+        max_tokens=600
     )
     if 'choices' in response and len(response['choices']) > 0:
         predicted_text = response['choices'][0]['message']['content'].strip()
