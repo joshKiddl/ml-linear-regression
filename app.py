@@ -58,14 +58,11 @@ def openai_predict():
 
 @app.route('/openai-solution', methods=['POST'])
 def openai_solution():
-    # Retrieve the input data from the request
     input_text = request.json['inputText']
 
-    # Prepend or append the desired string to the problem statement
     prompt_string = "Given the following user story, generate 5 high-quality acceptance criteria for agile software development. Each criterion should be no more than 100 characters long, in a list format. Only include the list in your response, no other text. The user story is:"
     problem_statement = prompt_string + " " + input_text
 
-    # Make the request to the OpenAI API using the openai.ChatCompletion.create() method
     response = openai.ChatCompletion.create(
         model="gpt-4",
         messages=[
@@ -94,14 +91,12 @@ def openai_solution():
 def tasks():
     input_text = request.json['inputText']
 
-    # Preprocess input_text to split it into individual sentences
     input_text_list = input_text.split(', ')
     input_text = ' '.join(input_text_list)
 
     prompt_string = "Given the following acceptance criteria and technical requirements, provide a list of 10 detailed programming tasks that would be needed to build the digital solution. Each item should be no more than 100 characters long, in a list format. Only include the list in your response, no other text: "
     problem_statement = prompt_string + " " + input_text
 
-    # Make the request to the OpenAI API using the openai.ChatCompletion.create() method
     response = openai.ChatCompletion.create(
         model="gpt-4",
         messages=[
@@ -130,7 +125,6 @@ def tasks():
 def targetCustomer():
     input_text = request.json['inputText']
 
-    # Preprocess input_text to split it into individual sentences
     input_text_list = input_text.split(', ')
     input_text = ' '.join(input_text_list)
 
@@ -156,7 +150,6 @@ def targetCustomer():
 def dataElements():
     input_text = request.json['inputText']
 
-    # Preprocess input_text to split it into individual sentences
     input_text_list = input_text.split(', ')
     input_text = ' '.join(input_text_list)
 
@@ -182,7 +175,6 @@ def dataElements():
 def hypothesis():
     input_text = request.json['inputText']
 
-    # Preprocess input_text to split it into individual sentences
     input_text_list = input_text.split(', ')
     input_text = ' '.join(input_text_list)
 
@@ -234,7 +226,6 @@ def marketingMaterial():
 def featureName():
     input_text = request.json['inputText']
 
-    # Preprocess input_text to split it into individual sentences
     input_text_list = input_text.split(', ')
     input_text = ' '.join(input_text_list)
 
@@ -260,7 +251,6 @@ def featureName():
 def whatsNext():
     input_text = request.json['inputText']
 
-    # Preprocess input_text to split it into individual sentences
     input_text_list = input_text.split(', ')
     input_text = ' '.join(input_text_list)
 
@@ -286,7 +276,6 @@ def whatsNext():
 def FeatureAssess():
     input_text = request.json['inputText']
 
-    # Preprocess input_text to split it into individual sentences
     input_text_list = input_text.split(', ')
     input_text = ' '.join(input_text_list)
 
@@ -312,7 +301,6 @@ def FeatureAssess():
 def TaskList():
     input_text = request.json['inputText']
 
-    # Preprocess input_text to split it into individual sentences
     input_text_list = input_text.split(', ')
     input_text = ' '.join(input_text_list)
 
@@ -338,7 +326,6 @@ def TaskList():
 def SocialPost():
     input_text = request.json['inputText']
 
-    # Preprocess input_text to split it into individual sentences
     input_text_list = input_text.split(', ')
     input_text = ' '.join(input_text_list)
 
@@ -364,7 +351,6 @@ def SocialPost():
 def BlogPost():
     input_text = request.json['inputText']
 
-    # Preprocess input_text to split it into individual sentences
     input_text_list = input_text.split(', ')
     input_text = ' '.join(input_text_list)
 
@@ -390,7 +376,6 @@ def BlogPost():
 def EmailPost():
     input_text = request.json['inputText']
 
-    # Preprocess input_text to split it into individual sentences
     input_text_list = input_text.split(', ')
     input_text = ' '.join(input_text_list)
 
@@ -398,6 +383,31 @@ def EmailPost():
     problem_statement = prompt_string + " " + input_text
     response = openai.ChatCompletion.create(
         model="gpt-4",  # Assuming the model's name
+        messages=[
+            {"role": "user", "content": problem_statement},
+        ],
+        max_tokens=200
+    )
+    if 'choices' in response and len(response['choices']) > 0:
+        predicted_text = response['choices'][0]['message']['content'].strip()
+        predicted_requirements = predicted_text.split('\n')
+        return jsonify({'predicted_items': predicted_requirements})
+    else:
+        print("No 'choices' in API response")
+        print(response)
+        return jsonify({'error': "No 'choices' in API response"})
+    
+@app.route('/frontend-code', methods=['POST'])
+def EmailPost():   
+    input_text = request.json['inputText']
+
+    input_text_list = input_text.split(', ')
+    input_text = ' '.join(input_text_list)
+
+    prompt_string = "Based on the user story, tasks, acceptance criteria, and solution, provide me with a piece of React code that is useable for the frontend of this feature. Make it 1000 characters maximum. Make this all return in 1 single paragraph. only return the code, no other text: "
+    problem_statement = prompt_string + " " + input_text
+    response = openai.ChatCompletion.create(
+        model="gpt-4",
         messages=[
             {"role": "user", "content": problem_statement},
         ],
