@@ -398,7 +398,7 @@ def EmailPost():
         return jsonify({'error': "No 'choices' in API response"})
     
 @app.route('/frontend-code', methods=['POST'])
-def EmailPost():   
+def FrontendCode():   
     input_text = request.json['inputText']
 
     input_text_list = input_text.split(', ')
