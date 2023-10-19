@@ -415,8 +415,7 @@ def FrontendCode():
     )
     if 'choices' in response and len(response['choices']) > 0:
         predicted_text = response['choices'][0]['message']['content'].strip()
-        predicted_requirements = predicted_text.split('\n')
-        return jsonify({'predicted_items': predicted_requirements})
+        return jsonify({'predicted_items': predicted_text})
     else:
         print("No 'choices' in API response")
         print(response)
