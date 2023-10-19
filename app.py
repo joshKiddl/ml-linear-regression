@@ -404,7 +404,7 @@ def FrontendCode():
     input_text_list = input_text.split(', ')
     input_text = ' '.join(input_text_list)
 
-    prompt_string = "Based on the given user story, tasks, acceptance criteria, and solution, provide me with a piece of React code that is useable for the frontend of this feature. Make it 1000 characters maximum. Make this all return in 1 single paragraph. only return the code, no other text: "
+    prompt_string = "Based on the given user story, tasks, acceptance criteria, and solution, provide me with a piece of React code that is useable for the frontend of this feature. This should be formatted like React JSX code. Only return the code, no other text: "
     problem_statement = prompt_string + " " + input_text
     response = openai.ChatCompletion.create(
         model="gpt-4",
