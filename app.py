@@ -420,6 +420,30 @@ def FrontendCode():
         print("No 'choices' in API response")
         print(response)
         return jsonify({'error': "No 'choices' in API response"})
+    
+@app.route('/backend-code', methods=['POST'])
+def BackendCode():   
+    input_text = request.json['inputText']
+
+    input_text_list = input_text.split(', ')
+    input_text = ' '.join(input_text_list)
+
+    prompt_string = "Based on the given user story, tasks, acceptance criteria, and solution, provide me with a piece of Python code that is useable for the frontend of this feature. This should be formatted like Python code. Only return the code, no other text: "
+    problem_statement = prompt_string + " " + input_text
+    response = openai.ChatCompletion.create(
+        model="gpt-4",
+        messages=[
+            {"role": "user", "content": problem_statement},
+        ],
+        max_tokens=1000
+    )
+    if 'choices' in response and len(response['choices']) > 0:
+        predicted_text = response['choices'][0]['message']['content'].strip()
+        return jsonify({'predicted_items': predicted_text})
+    else:
+        print("No 'choices' in API response")
+        print(response)
+        return jsonify({'error': "No 'choices' in API response"})
 
 # Run the Flask app
 if __name__ == '__main__':
